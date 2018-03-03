@@ -1,0 +1,17 @@
+h1 {
+	text-align: center;
+	color: #4c4c4c;
+	font-family: sans-serif;
+	font-size: 2em;
+	margin: 1em 0;
+}
+.interactive_rect{
+	fill: #4c4c4c;
+}
+
+.Interactive_Text{
+	fill: white;
+	font-size: 18px;
+	font-weight: bold;
+	text-anchor: middle;
+}
