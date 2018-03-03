@@ -1,6 +1,8 @@
 	var width  = 3000,
-		height = 3000;
-	
+		height = 3000,
+		centered;
+	var width1 = 781.83,
+		height1 = 599.23;
 	var svg = d3.select("body").append("svg")
 	    .attr("width", width)
 	    .attr("height", height)
@@ -19,10 +21,10 @@ d3.json("http://kekelovely.github.io/guangdong.json",function(error,georoot){
 	if (error){
 		return console.error(error);
 	}
-			console.log(georoot);
+	console.log(georoot);
 
-	var china = svg.append("g");
-
+	var china = svg.append("g")
+				.attr("id","china");
 	var provinces = china.selectAll("path")
 				.data(georoot.features)
 				.enter()
@@ -30,7 +32,33 @@ d3.json("http://kekelovely.github.io/guangdong.json",function(error,georoot){
 				.attr("class","province")
 				.attr("d",path)
 				.attr("stroke","#A9A9A9")
-				.attr("stroke-width",1);
+				.attr("stroke-width",1)
+				.on("click",clicked);
+function clicked(d) {
+  var x, y, k;
+
+  if (d && centered !== d) {
+    var centroid = path.centroid(d);
+    x = centroid[0];
+    y = centroid[1];
+    k = 4;
+    centered = d;
+
+  } else {
+    x = width1 / 2;
+    y = height1 / 2;
+    k = 1;
+    centered = null;
+  }
+
+  china.selectAll("path")
+      .classed("active", centered && function(d) { return d === centered; });
+
+  china.transition()
+      .duration(750)
+      .attr("transform", "translate(" + width1 / 2 + "," + height1 / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+      .style("stroke-width", 1.5 / k + "px");
+}
 	d3.json("https://kekelovely.github.io/green.json",function(error,valuedata){
 		var values = [];
 		for(var i=0; i<valuedata.cities.length; i++){
@@ -156,7 +184,7 @@ d3.json("http://kekelovely.github.io/guangdong.json",function(error,georoot){
 							var div = $('.laYers1');
 							div.fadeToggle();
 					});
-		
+
 });
 	d3.json("https://kekelovely.github.io/places.json",function(error,places){
 		var location = china.selectAll(".location")
